@@ -19,7 +19,8 @@ app.get('/', (req, res) => {
 
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ci1qlvi.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb://brandshop:fCjzIXrOiuDtlgqV@ac-ckje656-shard-00-00.ci1qlvi.mongodb.net:27017,ac-ckje656-shard-00-01.ci1qlvi.mongodb.net:27017,ac-ckje656-shard-00-02.ci1qlvi.mongodb.net:27017/?ssl=true&replicaSet=atlas-d5w1tu-shard-0&authSource=admin&retryWrites=true&w=majority`;
+// const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ci1qlvi.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -27,13 +28,14 @@ const client = new MongoClient(uri, {
         version: ServerApiVersion.v1,
         strict: true,
         deprecationErrors: true,
+        useNewUrlParser:true,useUnifiedTopology: true
     }
 });
 
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect();
 
         const CartData = client.db('cartDB').collection('cart')
 
@@ -80,7 +82,6 @@ async function run() {
             res.send(result);
         });
 
-        // my cart product add
 
         // update product 
         app.put('/update/:id', async (req, res) => {
@@ -124,9 +125,14 @@ async function run() {
 
 
         // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
+        // await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    } finally {
+        
+    } catch(err) {
+        console.log(err)
+      }
+     finally {
+        
         // Ensures that the client will close when you finish/error
         // await client.close();
     }
